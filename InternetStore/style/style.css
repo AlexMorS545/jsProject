@@ -12,8 +12,13 @@ body {
 .top-header {
 	display: flex;
 	align-items: center;
-	justify-content: flex-end;
+	justify-content: space-between;
 	background-color: #7a9e8a;
+}
+.logo {
+	display: block;
+	font-size: 30px;
+	color: #ffffff;
 }
 .btn-cart {
 	margin: 30px 0;
