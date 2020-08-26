@@ -1,0 +1,22 @@
+[
+	{
+		"id_product": 1,
+		"product_name": "Notebook",
+		"product_price": 2000
+	},
+	{
+		"id_product": 2,
+		"product_name": "Mouse",
+		"product_price": 20
+	},
+	{
+		"id_product": 3,
+		"product_name": "Keyboard",
+		"product_price": 200
+	},
+	{
+		"id_product": 4,
+		"product_name": "Gamepad",
+		"product_price": 50
+	}
+]

@@ -1,25 +1,35 @@
+
+let btnCart = document.querySelector('.btn-cart');
+let modalBasket = document.querySelector('.modal-basket');
+
+btnCart.addEventListener('click', () => {
+	modalBasket.classList.toggle('hidden');
+});
+
 class ProductList{
 	constructor(container='.products'){
 		this.container = container;
 		this.goods = [];
-		//this.allProducts = [];//массив товаров c добавлением фото
-		this._fetchProducts();
-		this.render();//вывод товаров на страницу
+		this.allProducts = [];//массив товаров c добавлением фото
+		this._fetchProducts()
+			.then(data => { //data - объект js
+				this.goods = [...data];
+				this.render()
+			});
 	}
 	_fetchProducts(){
-		this.goods = [
-			{id: 1, title: 'Notebook', price: 2000},
-			{id: 2, title: 'Mouse', price: 20},
-			{id: 3, title: 'Keyboard', price: 200},
-			{id: 4, title: 'Gamepad', price: 50},
-		];
+		return fetch('json/catalogData.json')
+			.then(result => result.json())
+			.catch(error => {
+				console.log(error);
+			})
 	}
 	
 	render(){
 		const block = document.querySelector(this.container);
 		for(let product of this.goods){
 			const item = new ProductItem(product);
-			//this.allProducts.push(item);
+			this.allProducts.push(item);
 			block.insertAdjacentHTML("beforeend",item.render());
 		}
 	}
@@ -32,60 +42,83 @@ class ProductList{
 }
 
 class ProductItem{
-	constructor(product, img = `img/${product.title}.jpg`){
-		this.title = product.title;
-		this.id = product.id;
-		this.price = product.price;
+	constructor(product, img = `img/${product.product_name}.jpg`){
+		this.product_name = product.product_name;
+		this.id_product = product.id_product;
+		this.product_price = product.product_price;
 		this.img = img;
 	}
 	render(){
 		return `<div class="product-item">
-					<img src="${this.img}">
-					<h3>${this.title}</h3>
-					<p>${this.price}</p>
-					<button class="buy-btn">Купить</button>
+					<img src="${this.img}" alt="photo product">
+					<h3>${this.product_name}</h3>
+					<p>${this.product_price}&#36;</p>
+					<button data-id="${this.id_product}" class="buy-btn">Купить</button>
 				</div>`
 	}
 }
 
 let list = new ProductList();
-console.log(list.totalSum());
 
 class CartList {
-	constructor() {
+	constructor(container='.table-body') {
+		this.container = container;
+		this.goods = [];
+		this.summa = 0;
+		this.count = 0;
+		this._fetchProductsToCard()
+			.then(data => {
+				this.goods = data.contents;
+				this.summa = data.amount;
+				this.count = data.result;
+				this.render()
+				this.cartTotalPrice()
+			});
 	}
-	renderProductToCard(){} // Метод добавления товара в корзину
-	
-	cartTotalPrice(){} // Метод расчета общей суммы в корзине
 
+	_fetchProductsToCard(){ // Метод добавления товара в корзину
+		return fetch('json/getCart.json')
+			.then(result => result.json())
+			.catch(error => {
+				console.log(error);
+			})
+	}
+
+	render(){
+		const block = document.querySelector(this.container);
+		this.goods.forEach(product => {
+			const item = new CartItem(product);
+			block.insertAdjacentHTML('beforeend', item.renderItem());
+		})
+	}
+
+	cartTotalPrice() { // Метод расчета общей суммы в корзине
+		let sum = this.summa;
+		document.querySelector('.summa').textContent = sum;
+	}
 	removeProductToCard(){} // Удаление товара из корзины
 }
 
 class CartItem {
-	constructor() {
+	constructor(product, img = `img/${product.product_name}.jpg`) {
+		this.product_name = product.product_name;
+		this.id_product = product.id_product;
+		this.product_price = product.product_price;
+		this.img = img;
+		this.count = product.count;
 	}
-	renderItem(){} // Метод для верстки каждого товара
+	renderItem(){ // Метод для верстки каждого товара
+		return `<tr>
+					<th scope="row">${this.id_product}</th>
+					<td><img src="${this.img}" alt="photo product"></td>
+					<td>${this.product_name}</td>
+					<td>${this.product_price}</td>
+					<td>${this.count}</td>
+					<td><i data-id="${this.id_product}" class="fas fa-trash"></i></td>
+				</tr>`;
+	}
 
 	btnListenerRemove(){} // Метод для кнопки удаления товара
 }
 
-/* const products = [
-	{id: 1, title: 'Notebook', price: 2000},
-	{id: 2, title: 'Mouse', price: 20},
-	{id: 3, title: 'Keyboard', price: 200},
-	{id: 4, title: 'Gamepad', price: 50},
-];
-//Функция для формирования верстки каждого товара
-const renderProduct = (item) => {
-	return `<div class="product-item">
-				<img src="img/${item.title}.jpg" alt="photo product">
-				<h3>${item.title}</h3>
-				<p class = "price">${item.price}&#36;</p>
-				<button class="buy-btn">Купить</button>
-			</div>`
-};
-const renderPage = list => {
-	document.querySelector('.products').insertAdjacentHTML('beforeend', list.map(item => renderProduct(item)).join(''));
-};
-
-renderPage(products); */
+let elem = new CartList;
