@@ -1,14 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 	<meta charset="UTF-8">
-	<title>Интернет-магазин</title>
+	<title>Сервер-Интернет-магазин</title>
 	<link rel="stylesheet" href="style/style.css">
+	<link href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet">
 </head>
 <body>
 	<header class="top-header container">
 		<span class="logo">E-shop</span>
 		<button class="btn-cart" type="button">Корзина</button>
+		<div class="modal-basket hidden">
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">ID</th>
+						<th scope="col">Картинка</th>
+						<th scope="col">Имя</th>
+						<th scope="col">Цена</th>
+						<th scope="col">Количество</th>
+						<th scope="col">Удалить</i></th>
+					</tr>
+				</thead>
+				<tbody class="table-body"></tbody>
+				<tfoot>
+					<tr>
+						<th colspan="2" scope="row">Итог:</th>
+						<td colspan="3">
+							<span class="summa">0</span>
+							<span class="sum-name">&#36;</span>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
 	</header>
 	<main class="main container">
 		<div class="products"></div>
